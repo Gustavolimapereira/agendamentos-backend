@@ -11,35 +11,44 @@ datasource db {
 }
 
 model User {
-  id           String @id @default(uuid())
+  id           String       @id @default(uuid())
   name         String
-  email        String @unique
+  email        String       @unique
   passwordHash String
-
-  role      Role
-  sectorId  String?
-  avatarUrl String?
-
-  sector Sector? @relation("SectorUsers", fields: [sectorId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role         Role
+  avatarUrl    String?
+  cnhFrontUrl  String?
+  cnhBackUrl   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Scheduling   Scheduling[]
 }
 
-model Sector {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  description String?
+model Car {
+  id         String       @id @default(uuid())
+  plate      String       @unique
+  model      String
+  active     Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Scheduling Scheduling[]
+}
 
-  users User[] @relation("SectorUsers")
-
+model Scheduling {
+  id        String   @id @default(uuid())
+  userId    String
+  carId     String
+  startTime DateTime
+  endTime   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  car  Car  @relation(fields: [carId], references: [id])
 }
 
 enum Role {
-  diretor
-  supervisor
-  colaborador
-  administrador
+  ADMINISTRADOR
+  SUPERVISOR
+  COLABORADOR
 }

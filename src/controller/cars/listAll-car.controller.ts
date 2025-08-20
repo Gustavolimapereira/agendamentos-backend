@@ -1,3 +1,7 @@
+import { CurrentUser } from '@/auth/current-user-decorator'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { UserPayload } from '@/auth/jwt.strategy'
+import { PrismaService } from '@/prisma/prisma.service'
 import {
   Controller,
   Get,
@@ -5,14 +9,10 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common'
-import { CurrentUser } from 'src/auth/current-user-decorator'
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { UserPayload } from 'src/auth/jwt.strategy'
-import { PrismaService } from 'src/prisma/prisma.service'
 
-@Controller('/accounts')
+@Controller('/cars')
 @UseGuards(JwtAuthGuard)
-export class ListAllAccountController {
+export class ListAllCarController {
   constructor(private prisma: PrismaService) {}
 
   @Get()
@@ -26,18 +26,14 @@ export class ListAllAccountController {
       throw new NotFoundException('Usuario não é um administrador do sistema')
     }
 
-    const users = await this.prisma.user.findMany({
+    const cars = await this.prisma.car.findMany({
       select: {
         id: true,
-        name: true,
-        email: true,
-        role: true,
-        avatarUrl: true,
-        cnhFrontUrl: true,
-        cnhBackUrl: true,
+        plate: true,
+        model: true,
       },
     })
 
-    return { users }
+    return { cars }
   }
 }

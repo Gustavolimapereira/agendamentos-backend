@@ -8,8 +8,19 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-	"email": "teste@hotmail.com",
-	"password": "12345236"
+	"email": "gu.lim@hotmail.com",
+	"password": "123456"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+	"email": "marcio.barbosa@hotmail.com",
+	"password": "123456"
 }
 
 ### CRUD DE USUARIOS
@@ -27,49 +38,115 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"name": "Gustavo novo teste 3",
-	"email": "teste11@hotmail.com",
-	"password": "12345236",
-	"role": "administrador"
+	"name": "Marcio Barbosa",
+	"email": "marcio.barbosa@hotmail.com",
+	"password": "123456",
+	"role": "COLABORADOR"
 }
 
 ###
 
 # @name update_account
-Put {{baseUrl}}/accounts/b700875a-6e3a-469f-baab-23fe8ace42b9
+Put {{baseUrl}}/accounts/68a1a4bf-38ca-4fb0-bb5a-ab1ea6ed3174
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"name": "Teste 2"
+	"name": "Gustavo Lima Pereira"
 }
 
 ###
 
 # @name delete_account
-Delete {{baseUrl}}/accounts/66a6f76a-23e1-45cf-bc73-5faa04c15df0
+Delete {{baseUrl}}/accounts/d9943ffc-feac-4e37-b4d8-9ac9967757bb
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
 
-### CRUD DE SETORES
+### CRUD DE CARROS
 
-# @name listAll_accounts
-GET {{baseUrl}}/accounts
+# @name listAll_cars
+GET {{baseUrl}}/cars
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 ###
 
 # @name create_sector
-POST {{baseUrl}}/sectors
+POST {{baseUrl}}/cars
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"name": "VENDAS",
-	"description": "setor de vendas da empresa crossconection"
+	"plate": "7894-fere",
+	"model": "Vectra"
 }
 
 ###
+
+# @name update_car
+Put {{baseUrl}}/car/9da9b2a2-64ac-423b-8141-804a2761109b
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+	"active": "false"
+}
+
+###
+
+# @name delete_car
+Delete {{baseUrl}}/car/68165443-9056-4610-b406-53957ef16f0e
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+### CRUD DE AGENDAMENTOS
+
+# @name create_scheduling
+POST {{baseUrl}}/scheduling
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+	"userId": "7be13bcb-43a1-4811-b0d1-93c57f171225",
+  	"carId": "8748451c-7613-4cc2-b9ca-aa95218c3edd",
+  	"startTime": "2025-05-19T10:00:00Z",
+	"endTime": "2025-05-19T11:00:00Z"
+}
+
+###
+
+# @name create_scheduling
+GET {{baseUrl}}/scheduling
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name update_scheduling
+PUT {{baseUrl}}/scheduling/ba1276fe-80d8-4ead-8648-2269c80566af
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+	"cardId" : "c5eb696d-ec5d-424b-b1c0-c0c67adf3000"
+}
+
+###
+
+# @name delete_scheduling
+DELETE {{baseUrl}}/scheduling/ed37c048-297f-43fe-8887-cdb7e597e750
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+### UPLOAD DE IMAGENS
+
+# @name upload_avatar
+POST {{baseUrl}}/upload-avatar
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

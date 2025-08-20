@@ -20,14 +20,14 @@ const createAccountBodySchema = z.object({
   email: z.string().email(),
   password: z.string(),
   avatarUrl: z.string().url().optional(),
-  role: z.enum(['diretor', 'supervisor', 'colaborador', 'administrador']),
+  role: z.enum(['ADMINISTRADOR', 'SUPERVISOR', 'COLABORADOR']),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(createAccountBodySchema)
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class CreateAccountController {
   constructor(private prisma: PrismaService) {}
 
@@ -37,15 +37,17 @@ export class CreateAccountController {
     @CurrentUser() userload: UserPayload,
     @Body(bodyValidationPipe) body: CreateAccountBodySchema,
   ) {
-    const userLogin = await this.prisma.user.findUnique({
-      where: { id: userload.sub },
-    })
+    // const userLogin = await this.prisma.user.findUnique({
+    //   where: { id: userload.sub },
+    // })
 
-    console.log(userLogin, 'userLogin')
+    // console.log(userLogin, 'userLogin')
 
-    if (userLogin?.role !== 'administrador') {
-      throw new NotFoundException('Usuario não é um administrador do sistema')
-    }
+    // if (userLogin?.role === 'COLABORADOR') {
+    //   throw new NotFoundException(
+    //     'Usuario não é um administrador ou supervisor do sistema',
+    //   )
+    // }
 
     const { name, email, password, role } = body
 
@@ -59,7 +61,7 @@ export class CreateAccountController {
 
     const hashedPassword = await bcrypt.hash(password, 8)
 
-    await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         name,
         email,
@@ -67,5 +69,7 @@ export class CreateAccountController {
         role,
       },
     })
+
+    return { user }
   }
 }

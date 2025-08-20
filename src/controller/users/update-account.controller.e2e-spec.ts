@@ -6,7 +6,7 @@ import { Test } from '@nestjs/testing'
 import * as bcrypt from 'bcrypt'
 import request from 'supertest'
 
-describe('Delete conta (E2E)', () => {
+describe('Atualizao usuario (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
@@ -25,15 +25,27 @@ describe('Delete conta (E2E)', () => {
     await app.init()
   })
 
-  test('[DELETE] /accounts/:id', async () => {
+  test('[UPDATE ADMINISTRADOR] /accounts/:id', async () => {
     const password = '12345236'
 
+    // cria admin
     const user = await prisma.user.create({
       data: {
-        name: 'Usuário de Teste',
+        name: 'Usuário de Teste admin',
         email: 'teste@hotmail.com',
         passwordHash: await bcrypt.hash(password, 8),
-        role: 'ADMINISTRADOR', // ou 'administrador', 'diretor', etc.
+        role: 'ADMINISTRADOR',
+        avatarUrl: null,
+      },
+    })
+
+    // cria colaborador
+    const userColab = await prisma.user.create({
+      data: {
+        name: 'Usuário de Teste colaborador',
+        email: 'teste.colab@hotmail.com',
+        passwordHash: await bcrypt.hash(password, 8),
+        role: 'COLABORADOR',
         avatarUrl: null,
       },
     })
@@ -49,26 +61,42 @@ describe('Delete conta (E2E)', () => {
 
     expect(responseLogin.statusCode).toBe(201)
 
+    // chama update
     const response = await request(app.getHttpServer())
-      .delete(`/accounts/${user.id}`)
+      .put(`/accounts/${userColab.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        name: 'Usuário Atualizado',
+        role: 'SUPERVISOR',
+      })
 
-    expect(response.statusCode).toBe(204)
+    expect(response.statusCode).toBe(200)
+    expect(response.body.userUpdated.name).toBe('Usuário Atualizado')
+    expect(response.body.userUpdated.role).toBe('SUPERVISOR')
+
+    // garante no banco também
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: userColab.id },
+    })
+    expect(updatedUser?.name).toBe('Usuário Atualizado')
+    expect(updatedUser?.role).toBe('SUPERVISOR')
   })
 
-  test('[DELETE COLABORADOR] /accounts/:id', async () => {
+  test('[UPDATE COLABORADOR] /accounts/:id', async () => {
     const password = '12345236'
 
+    // cria admin
     const user = await prisma.user.create({
       data: {
-        name: 'Usuário de Teste',
+        name: 'Usuário de Teste colaborador',
         email: 'teste1@hotmail.com',
         passwordHash: await bcrypt.hash(password, 8),
-        role: 'COLABORADOR', // ou 'administrador', 'diretor', etc.
+        role: 'COLABORADOR',
         avatarUrl: null,
       },
     })
 
+    // cria colaborador
     const userColab = await prisma.user.create({
       data: {
         name: 'Usuário de Teste colaborador',
@@ -90,13 +118,18 @@ describe('Delete conta (E2E)', () => {
 
     expect(responseLogin.statusCode).toBe(201)
 
+    // chama update
     const response = await request(app.getHttpServer())
-      .delete(`/accounts/${userColab.id}`)
+      .put(`/accounts/${userColab.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        name: 'Usuário Atualizado',
+        role: 'SUPERVISOR',
+      })
 
     expect(response.statusCode).toBe(404)
     expect(response.body.message).toBe(
-      'Usuario não é um administrador do sistema',
+      'Usuario não é um administrador ou supervisor do sistema',
     )
   })
 })

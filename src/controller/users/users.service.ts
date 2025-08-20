@@ -12,4 +12,18 @@ export class UsersService {
       data: { avatarUrl: filename },
     })
   }
+
+  async updateCnhFront(userId: string, filename: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { cnhFrontUrl: filename },
+    })
+  }
+
+  async updateCnhBack(userId: string, filename: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { cnhBackUrl: filename },
+    })
+  }
 }

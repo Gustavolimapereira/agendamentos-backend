@@ -11,9 +11,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { UserPayload } from 'src/auth/jwt.strategy'
 import { PrismaService } from 'src/prisma/prisma.service'
 
-@Controller('/accounts/:id')
+@Controller('/car/:id')
 @UseGuards(JwtAuthGuard)
-export class DeleteAccountController {
+export class DeleteCarController {
   constructor(private prisma: PrismaService) {}
 
   @Delete()
@@ -23,19 +23,19 @@ export class DeleteAccountController {
       where: { id: userLoad.sub },
     })
 
-    if (userLogin?.role === 'COLABORADOR') {
+    if (userLogin?.role !== 'ADMINISTRADOR') {
       throw new NotFoundException('Usuario não é um administrador do sistema')
     }
 
-    const user = await this.prisma.user.findUnique({
+    const car = await this.prisma.car.findUnique({
       where: { id },
     })
 
-    if (!user) {
-      throw new NotFoundException('Usuario não encontrado')
+    if (!car) {
+      throw new NotFoundException('Carro não encontrado')
     }
 
-    await this.prisma.user.delete({
+    await this.prisma.car.delete({
       where: { id },
     })
   }

@@ -29,7 +29,7 @@ describe('Autenticação (E2E)', () => {
         name: 'Usuário de Teste',
         email: 'teste@hotmail.com',
         passwordHash: await bcrypt.hash(password, 8),
-        role: 'administrador', // ou 'administrador', 'diretor', etc.
+        role: 'ADMINISTRADOR', // ou 'administrador', 'diretor', etc.
         avatarUrl: null,
       },
     })

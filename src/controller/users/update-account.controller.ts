@@ -19,9 +19,8 @@ const updateAccountBodySchema = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
   password: z.string().optional(),
-  role: z
-    .enum(['diretor', 'supervisor', 'colaborador', 'administrador'])
-    .optional(),
+  avatarUrl: z.string().url().optional(),
+  role: z.enum(['ADMINISTRADOR', 'SUPERVISOR', 'COLABORADOR']).optional(),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(updateAccountBodySchema)
@@ -44,8 +43,10 @@ export class UpdateAccountController {
     const userLogin = await this.prisma.user.findUnique({
       where: { id: userLoad.sub },
     })
-    if (userLogin?.role !== 'administrador') {
-      throw new NotFoundException('Usuario não é um administrador do sistema')
+    if (userLogin?.role === 'COLABORADOR') {
+      throw new NotFoundException(
+        'Usuario não é um administrador ou supervisor do sistema',
+      )
     }
 
     const user = await this.prisma.user.findUnique({

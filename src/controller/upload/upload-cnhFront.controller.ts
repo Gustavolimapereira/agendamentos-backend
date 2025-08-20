@@ -13,8 +13,8 @@ import { extname } from 'path' // ajuste conforme seu guard
 import { UsersService } from '../users/users.service'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 
-@Controller('upload-avatar')
-export class UploadAvatarController {
+@Controller('upload-cnh-front')
+export class UploadCnhFrontController {
   constructor(private usersService: UsersService) {}
 
   @Post()
@@ -22,7 +22,7 @@ export class UploadAvatarController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: './uploads/cnhFront',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9)
@@ -32,13 +32,13 @@ export class UploadAvatarController {
       }),
     }),
   )
-  async uploadAvatar(
+  async uploadCnhFront(
     @UploadedFile() file: Express.Multer.File,
     @Req() request: RequestWithUser, // ou crie um tipo `RequestWithUser`
   ) {
     const userId = request.user.sub // ID extraído do JWT
 
-    const result = await this.usersService.updateAvatar(userId, file.filename)
+    const result = await this.usersService.updateCnhFront(userId, file.filename)
     return { message: 'Avatar atualizado com sucesso', user: result }
   }
 }

@@ -7,7 +7,8 @@ import { AuthenticateModule } from './controller/authenticate/authenticate.modul
 import { join } from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { UploadModule } from './controller/upload/upload.module'
-import { SectorModule } from './controller/sectors/sector.module'
+import { CarModule } from './controller/cars/car.module'
+import { SchedulingModule } from './controller/scheduling/scheduling.module'
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { SectorModule } from './controller/sectors/sector.module'
     AuthModule,
     AuthenticateModule,
     UserModule,
-    SectorModule,
+    CarModule,
+    SchedulingModule,
     UploadModule,
   ],
   controllers: [],

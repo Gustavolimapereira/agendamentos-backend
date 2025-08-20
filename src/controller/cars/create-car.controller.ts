@@ -14,48 +14,52 @@ import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
 
-const createSectorBodySchema = z.object({
-  name: z.string(),
+const createCarBodySchema = z.object({
+  plate: z.string(),
+  model: z.string(),
+  active: z.boolean().optional(),
   description: z.string().optional(),
 })
 
-const bodyValidationPipe = new ZodValidationPipe(createSectorBodySchema)
-type CreateSectorBodySchema = z.infer<typeof createSectorBodySchema>
+const bodyValidationPipe = new ZodValidationPipe(createCarBodySchema)
+type CreateCarBodySchema = z.infer<typeof createCarBodySchema>
 
-@Controller('/sectors')
+@Controller('/cars')
 @UseGuards(JwtAuthGuard)
-export class CreateSectorController {
+export class CreateCarController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
   @HttpCode(201)
   async handle(
     @CurrentUser() userload: UserPayload,
-    @Body(bodyValidationPipe) body: CreateSectorBodySchema,
+    @Body(bodyValidationPipe) body: CreateCarBodySchema,
   ) {
     const userLogin = await this.prisma.user.findUnique({
       where: { id: userload.sub },
     })
 
-    if (userLogin?.role !== 'administrador') {
+    if (userLogin?.role === 'COLABORADOR') {
       throw new NotFoundException('Usuario não é um administrador do sistema')
     }
 
-    const { name, description } = body
+    const { plate, model } = body
 
-    const sectorWitchSameName = await this.prisma.sector.findUnique({
-      where: { name },
+    const carrWitchSamePlate = await this.prisma.car.findUnique({
+      where: { plate },
     })
 
-    if (sectorWitchSameName) {
-      throw new ConflictException('Setor já cadastrado')
+    if (carrWitchSamePlate) {
+      throw new ConflictException('Carro já cadastrado')
     }
 
-    await this.prisma.sector.create({
+    const car = await this.prisma.car.create({
       data: {
-        name,
-        description,
+        plate,
+        model,
       },
     })
+
+    return { car }
   }
 }
