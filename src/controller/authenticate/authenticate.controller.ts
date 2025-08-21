@@ -36,6 +36,8 @@ export class AuthenticateController {
       },
     })
 
+    console.log(user, 'user')
+
     if (!user) {
       throw new UnauthorizedException('Credenciais não encontradas.(user)')
     }
