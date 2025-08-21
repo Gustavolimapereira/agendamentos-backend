@@ -38,10 +38,10 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-	"name": "Marcio Barbosa",
-	"email": "marcio.barbosa@hotmail.com",
+	"name": "Gustavo Lima",
+	"email": "gu.lim@hotmail.com",
 	"password": "123456",
-	"role": "COLABORADOR"
+	"role": "ADMINISTRADOR"
 }
 
 ###

@@ -1,19 +1,19 @@
 services:
   postgres:
-    container_name: bd-callingsystems-pg
+    container_name: bd-scheduling-pg
     image: postgres
     ports:
       - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: nest-clean
+      POSTGRES_DB: nest-scheduling
       PGDATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres
 
   cache:
-    container_name: nest-clean-cache
+    container_name: nest-scheduling-cache
     image: redis
     ports:
       - 6379:6379
