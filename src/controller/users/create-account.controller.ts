@@ -41,8 +41,6 @@ export class CreateAccountController {
       where: { id: userload.sub },
     })
 
-    console.log(userLogin, 'userLogin')
-
     if (userLogin?.role === 'COLABORADOR') {
       throw new NotFoundException(
         'Usuario não é um administrador ou supervisor do sistema',
