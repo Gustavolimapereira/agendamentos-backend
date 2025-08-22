@@ -30,7 +30,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @ApiTags('Users')
 @Controller('/accounts')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class CreateAccountController {
   constructor(private prisma: PrismaService) {}
 
@@ -43,17 +43,15 @@ export class CreateAccountController {
     @CurrentUser() userload: UserPayload,
     @Body(bodyValidationPipe) body: CreateAccountBodySchema,
   ) {
-    // const userLogin = await this.prisma.user.findUnique({
-    //   where: { id: userload.sub },
-    // })
+    const userLogin = await this.prisma.user.findUnique({
+      where: { id: userload.sub },
+    })
 
-    // console.log(userLogin, 'userLogin')
-
-    // if (userLogin?.role === 'COLABORADOR') {
-    //   throw new NotFoundException(
-    //     'Usuario não é um administrador ou supervisor do sistema',
-    //   )
-    // }
+    if (userLogin?.role === 'COLABORADOR') {
+      throw new NotFoundException(
+        'Usuario não é um administrador ou supervisor do sistema',
+      )
+    }
 
     const { name, email, password, role } = body
 
