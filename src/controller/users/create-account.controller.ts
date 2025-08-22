@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import * as bcrypt from 'bcrypt'
 import { CurrentUser } from 'src/auth/current-user-decorator'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
@@ -14,6 +15,7 @@ import { UserPayload } from 'src/auth/jwt.strategy'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
+import { UsersCreateDto } from './dto/users.dto'
 
 const createAccountBodySchema = z.object({
   name: z.string(),
@@ -26,12 +28,16 @@ const createAccountBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(createAccountBodySchema)
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
+@ApiTags('Users')
 @Controller('/accounts')
 // @UseGuards(JwtAuthGuard)
 export class CreateAccountController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @ApiBody({ type: UsersCreateDto })
+  @ApiResponse({ status: 201, description: 'Cadastro realizado com sucesso' })
+  @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(201)
   async handle(
     @CurrentUser() userload: UserPayload,
