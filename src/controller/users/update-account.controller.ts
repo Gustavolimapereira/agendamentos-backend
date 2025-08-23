@@ -7,6 +7,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import * as bcrypt from 'bcrypt'
 import { CurrentUser } from 'src/auth/current-user-decorator'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
@@ -14,6 +21,7 @@ import { UserPayload } from 'src/auth/jwt.strategy'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
+import { UsersUpdateDto } from './dto/users.dto'
 
 const updateAccountBodySchema = z.object({
   name: z.string().optional(),
@@ -26,12 +34,29 @@ const updateAccountBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(updateAccountBodySchema)
 type UpdateAccountBodySchema = z.infer<typeof updateAccountBodySchema>
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('/accounts/:id')
 @UseGuards(JwtAuthGuard)
 export class UpdateAccountController {
   constructor(private prisma: PrismaService) {}
 
   @Put()
+  @ApiParam({
+    name: 'id',
+    description: 'ID do usuário a ser atualizado',
+    example: '123',
+  })
+  @ApiBody({ type: UsersUpdateDto })
+  @ApiResponse({ status: 200, description: 'Cadastro atualizado com sucesso' })
+  @ApiResponse({
+    status: 401,
+    description: 'Algo inválido',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuário não encontrado',
+  })
   @HttpCode(200)
   async handle(
     @CurrentUser() userLoad: UserPayload,
