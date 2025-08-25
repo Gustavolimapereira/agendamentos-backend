@@ -12,6 +12,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 
 const updateSchedulingBodySchema = z.object({
@@ -24,12 +25,36 @@ const updateSchedulingBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(updateSchedulingBodySchema)
 type UpdateSchedulingBodySchema = z.infer<typeof updateSchedulingBodySchema>
 
+@ApiTags('Scheduling')
+@ApiBearerAuth()
 @Controller('/scheduling/:id')
 @UseGuards(JwtAuthGuard)
 export class UpdateSchedulingController {
   constructor(private prisma: PrismaService) {}
 
   @Put()
+  @ApiParam({
+    name: 'userId',
+    description: 'ID do usuário a ser atualizado',
+    example: '123',
+  })
+  @ApiParam({
+    name: 'carId',
+    description: 'ID do carro a ser atualizado',
+    example: '123',
+  })
+  @ApiParam({
+    name: 'startTime',
+    description: 'Data e hora de início do agendamento',
+    example: '2024-01-01T10:00:00Z',
+  })
+  @ApiParam({
+    name: 'endTime',
+    description: 'Data e hora de término do agendamento',
+    example: '2024-01-01T12:00:00Z',
+  })
+  @ApiResponse({ status: 200, description: 'Atualizado com sucesso' })
+  @ApiResponse({ status: 401, description: 'Algo inválido' })
   @HttpCode(200)
   async handle(
     @CurrentUser() userLoad: UserPayload,

@@ -12,7 +12,9 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
+import { SchedulingCreateDto } from './dto/scheduling.dto'
 
 const createSchedulingBodySchema = z.object({
   userId: z.string(),
@@ -24,12 +26,20 @@ const createSchedulingBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(createSchedulingBodySchema)
 type CreateSchedulingBodySchema = z.infer<typeof createSchedulingBodySchema>
 
+@ApiTags('Scheduling')
+@ApiBearerAuth()
 @Controller('/scheduling')
 @UseGuards(JwtAuthGuard)
 export class CreateSchedulingController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @ApiBody({ type: SchedulingCreateDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Agendamento realizado com sucesso',
+  })
+  @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(201)
   async handle(
     @CurrentUser() userload: UserPayload,
