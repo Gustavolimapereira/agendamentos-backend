@@ -10,7 +10,7 @@ export class UsersCreateDto {
   @ApiProperty({ example: '123456' })
   password!: string
 
-  @ApiProperty({ example: 'ADMINISTRADOR' })
+  @ApiProperty({ example: 'ADMINISTRADOR, SUPERVISOR, COLABORADOR' })
   role!: string
 }
 
