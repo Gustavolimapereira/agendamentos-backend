@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UsersCreateDto {
-  @ApiProperty({ example: 'Gustavo Lima' })
+  @ApiProperty({ example: 'Nome do usuario' })
   name!: string
 
-  @ApiProperty({ example: 'gu.lim@hotmail.com' })
+  @ApiProperty({ example: 'emailexemplo@email.com' })
   email!: string
 
   @ApiProperty({ example: '123456' })
@@ -25,15 +25,15 @@ export class UsersDeleteDto {
 }
 
 export class UsersUpdateDto {
-  @ApiProperty({ example: 'Gustavo Lima' })
+  @ApiProperty({ example: 'usuario atualizado' })
   name!: string
 
-  @ApiProperty({ example: 'gu.lim@hotmail.com' })
+  @ApiProperty({ example: 'emailexemplo1@email.com' })
   email!: string
 
   @ApiProperty({ example: '123456' })
   password!: string
 
-  @ApiProperty({ example: 'ADMINISTRADOR' })
+  @ApiProperty({ example: 'COLABORADOR' })
   role!: string
 }
