@@ -7,12 +7,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { CurrentUser } from 'src/auth/current-user-decorator'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { UserPayload } from 'src/auth/jwt.strategy'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { z } from 'zod'
+import { CarsCreateDto } from './dto/cars.dto'
 
 const createCarBodySchema = z.object({
   plate: z.string(),
@@ -24,12 +26,17 @@ const createCarBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(createCarBodySchema)
 type CreateCarBodySchema = z.infer<typeof createCarBodySchema>
 
+@ApiTags('Cars')
+@ApiBearerAuth()
 @Controller('/cars')
 @UseGuards(JwtAuthGuard)
 export class CreateCarController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @ApiBody({ type: CarsCreateDto })
+  @ApiResponse({ status: 201, description: 'Cadastro realizado com sucesso' })
+  @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(201)
   async handle(
     @CurrentUser() userload: UserPayload,

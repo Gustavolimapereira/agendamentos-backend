@@ -12,6 +12,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 
 const updateCarBodySchema = z.object({
@@ -23,12 +24,21 @@ const updateCarBodySchema = z.object({
 const bodyValidationPipe = new ZodValidationPipe(updateCarBodySchema)
 type UpdateCarBodySchema = z.infer<typeof updateCarBodySchema>
 
+@ApiTags('Cars')
+@ApiBearerAuth()
 @Controller('/car/:id')
 @UseGuards(JwtAuthGuard)
 export class UpdateCarController {
   constructor(private prisma: PrismaService) {}
 
   @Put()
+  @ApiParam({
+    name: 'id',
+    description: 'ID do carro a ser atualizado',
+    example: '123',
+  })
+  @ApiResponse({ status: 200, description: 'Atualizado com sucesso' })
+  @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(200)
   async handle(
     @CurrentUser() userLoad: UserPayload,
