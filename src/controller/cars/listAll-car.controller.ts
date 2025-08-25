@@ -9,8 +9,7 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CarsListDto } from './dto/cars.dto'
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('Cars')
 @ApiBearerAuth()
@@ -20,7 +19,6 @@ export class ListAllCarController {
   constructor(private prisma: PrismaService) {}
 
   @Get()
-  @ApiBody({ type: CarsListDto })
   @ApiResponse({ status: 200, description: 'Listagem realizada com sucesso' })
   @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(200)
