@@ -51,7 +51,7 @@ export class UpdateCarController {
       where: { id: userLoad.sub },
     })
 
-    if (userLogin?.role !== 'ADMINISTRADOR') {
+    if (userLogin?.role === 'COLABORADOR') {
       throw new NotFoundException('Usuario não é um administrador do sistema')
     }
 
