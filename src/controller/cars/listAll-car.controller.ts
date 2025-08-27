@@ -36,6 +36,7 @@ export class ListAllCarController {
         id: true,
         plate: true,
         model: true,
+        active: true,
       },
     })
 
