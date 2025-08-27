@@ -18,7 +18,7 @@ import { z } from 'zod'
 const updateCarBodySchema = z.object({
   plate: z.string().optional(),
   model: z.string().optional(),
-  active: z.string().optional(),
+  active: z.boolean().optional(),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(updateCarBodySchema)
@@ -68,7 +68,7 @@ export class UpdateCarController {
       data: {
         plate,
         model,
-        active: body.active ? body.active === 'true' : undefined,
+        active: body.active,
       },
     })
 
