@@ -34,6 +34,19 @@ export class ListAllSchedulingController {
         endTime: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        car: {
+          select: {
+            id: true,
+            plate: true,
+            model: true,
+          },
+        },
       },
     })
 
