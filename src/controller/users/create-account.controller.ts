@@ -30,7 +30,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @ApiTags('Users')
 @Controller('/accounts')
-// @UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard) // cometar para criar a primeira conta
 export class CreateAccountController {
   constructor(private prisma: PrismaService) {}
 
@@ -43,6 +43,7 @@ export class CreateAccountController {
     @CurrentUser() userload: UserPayload,
     @Body(bodyValidationPipe) body: CreateAccountBodySchema,
   ) {
+    // comertar para criar a primeira conta inicio
     /*
     const userLogin = await this.prisma.user.findUnique({
       where: { id: userload.sub },
@@ -53,6 +54,7 @@ export class CreateAccountController {
         'Usuario não é um administrador ou supervisor do sistema',
       )
     } */
+    // comertar para criar a primeira conta fim
 
     const { name, email, password, role } = body
 

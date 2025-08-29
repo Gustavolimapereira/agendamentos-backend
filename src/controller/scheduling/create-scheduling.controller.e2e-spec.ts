@@ -6,7 +6,7 @@ import { Test } from '@nestjs/testing'
 import * as bcrypt from 'bcrypt'
 import request from 'supertest'
 
-describe('Criar conta (E2E)', () => {
+describe('Criar carro (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
@@ -25,7 +25,7 @@ describe('Criar conta (E2E)', () => {
     await app.init()
   })
 
-  test('[POST] /accounts 201', async () => {
+  test('[POST] /scheduling 201', async () => {
     const password = '12345236'
 
     const user = await prisma.user.create({
@@ -48,23 +48,7 @@ describe('Criar conta (E2E)', () => {
 
     expect(responseLogin.statusCode).toBe(201)
 
-    const response = await request(app.getHttpServer())
-      .post('/accounts')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'Teste',
-        email: 'teste22@hotmail.com',
-        password: '12345236',
-        role: 'ADMINISTRADOR', // ou 'administrador', 'diretor', etc.
-      })
-
-    expect(response.statusCode).toBe(201)
-  })
-
-  test('[POST] /accounts 404', async () => {
-    const password = '12345236'
-
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name: 'Usuário de Teste',
         email: 'teste1@hotmail.com',
@@ -73,34 +57,36 @@ describe('Criar conta (E2E)', () => {
       },
     })
 
-    const accessToken = jwt.sign({ sub: user.id })
+    const userScheduling = await prisma.user.findUnique({
+      where: { email: 'teste1@hotmail.com' },
+    })
 
-    const responseLogin = await request(app.getHttpServer())
-      .post('/sessions')
-      .send({
-        email: 'teste1@hotmail.com',
-        password: '12345236',
-      })
+    const plate = '123-AAAA'
+    await prisma.car.create({
+      data: {
+        plate,
+        model: 'Gol G4',
+      },
+    })
 
-    expect(responseLogin.statusCode).toBe(201)
+    const carScheduling = await prisma.car.findUnique({
+      where: { plate },
+    })
 
     const response = await request(app.getHttpServer())
-      .post('/accounts')
+      .post('/scheduling')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Teste',
-        email: 'teste11@hotmail.com',
-        password: '12345236',
-        role: 'COLABORADOR', // ou 'administrador', 'diretor', etc.
+        userId: userScheduling?.id,
+        carId: carScheduling?.id,
+        startTime: '2025-05-19T10:00:00Z',
+        endTime: '2025-05-19T11:00:00Z',
       })
 
-    expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe(
-      'Usuario não é um administrador ou supervisor do sistema',
-    )
+    expect(response.statusCode).toBe(201)
   })
 
-  test('[POST] /accounts 409', async () => {
+  test('[POST] /scheduling 209', async () => {
     const password = '12345236'
 
     const user = await prisma.user.create({
@@ -117,23 +103,41 @@ describe('Criar conta (E2E)', () => {
     const responseLogin = await request(app.getHttpServer())
       .post('/sessions')
       .send({
-        email: 'teste1@hotmail.com',
+        email: 'teste2@hotmail.com',
         password: '12345236',
       })
 
     expect(responseLogin.statusCode).toBe(201)
 
+    await prisma.user.create({
+      data: {
+        name: 'Usuário de Teste',
+        email: 'teste3@hotmail.com',
+        passwordHash: await bcrypt.hash(password, 8),
+        role: 'COLABORADOR',
+      },
+    })
+
+    const userScheduling = await prisma.user.findUnique({
+      where: { email: 'teste3@hotmail.com' },
+    })
+
+    const plate = '123-AAAA'
+
+    const carScheduling = await prisma.car.findUnique({
+      where: { plate },
+    })
+
     const response = await request(app.getHttpServer())
-      .post('/accounts')
+      .post('/scheduling')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Teste',
-        email: 'teste@hotmail.com',
-        password: '12345236',
-        role: 'COLABORADOR', // ou 'administrador', 'diretor', etc.
+        userId: userScheduling?.id,
+        carId: carScheduling?.id,
+        startTime: '2025-05-19T10:00:00Z',
+        endTime: '2025-05-19T11:00:00Z',
       })
 
     expect(response.statusCode).toBe(409)
-    expect(response.body.message).toBe('Email já cadastrado')
   })
 })

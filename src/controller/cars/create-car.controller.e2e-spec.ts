@@ -6,7 +6,7 @@ import { Test } from '@nestjs/testing'
 import * as bcrypt from 'bcrypt'
 import request from 'supertest'
 
-describe('Criar conta (E2E)', () => {
+describe('Criar carro (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let jwt: JwtService
@@ -25,7 +25,7 @@ describe('Criar conta (E2E)', () => {
     await app.init()
   })
 
-  test('[POST] /accounts 201', async () => {
+  test('[POST] /cars', async () => {
     const password = '12345236'
 
     const user = await prisma.user.create({
@@ -49,19 +49,17 @@ describe('Criar conta (E2E)', () => {
     expect(responseLogin.statusCode).toBe(201)
 
     const response = await request(app.getHttpServer())
-      .post('/accounts')
+      .post('/cars')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Teste',
-        email: 'teste22@hotmail.com',
-        password: '12345236',
-        role: 'ADMINISTRADOR', // ou 'administrador', 'diretor', etc.
+        plate: '123-AAAA',
+        model: 'Gol G4',
       })
 
     expect(response.statusCode).toBe(201)
   })
 
-  test('[POST] /accounts 404', async () => {
+  test('[POST] /cars 404', async () => {
     const password = '12345236'
 
     const user = await prisma.user.create({
@@ -85,22 +83,17 @@ describe('Criar conta (E2E)', () => {
     expect(responseLogin.statusCode).toBe(201)
 
     const response = await request(app.getHttpServer())
-      .post('/accounts')
+      .post('/cars')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Teste',
-        email: 'teste11@hotmail.com',
-        password: '12345236',
-        role: 'COLABORADOR', // ou 'administrador', 'diretor', etc.
+        plate: '123-AAAA',
+        model: 'Gol G4',
       })
 
     expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe(
-      'Usuario não é um administrador ou supervisor do sistema',
-    )
   })
 
-  test('[POST] /accounts 409', async () => {
+  test('[POST] /cars 409', async () => {
     const password = '12345236'
 
     const user = await prisma.user.create({
@@ -117,23 +110,20 @@ describe('Criar conta (E2E)', () => {
     const responseLogin = await request(app.getHttpServer())
       .post('/sessions')
       .send({
-        email: 'teste1@hotmail.com',
+        email: 'teste2@hotmail.com',
         password: '12345236',
       })
 
     expect(responseLogin.statusCode).toBe(201)
 
     const response = await request(app.getHttpServer())
-      .post('/accounts')
+      .post('/cars')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Teste',
-        email: 'teste@hotmail.com',
-        password: '12345236',
-        role: 'COLABORADOR', // ou 'administrador', 'diretor', etc.
+        plate: '123-AAAA',
+        model: 'Gol G4',
       })
 
     expect(response.statusCode).toBe(409)
-    expect(response.body.message).toBe('Email já cadastrado')
   })
 })
