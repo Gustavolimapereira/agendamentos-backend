@@ -52,6 +52,6 @@ npm run start:dev
 email: admin@email.com
 senha: 123456
 
-agendamento-agendamento-backend.frcirq.easypanel.host/sessions
+https://agendamento-agendamento-backend.frcirq.easypanel.host/sessions
 ou
 http://localhost:3333/sessions
