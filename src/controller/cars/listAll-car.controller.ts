@@ -1,14 +1,6 @@
-import { CurrentUser } from '@/auth/current-user-decorator'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { UserPayload } from '@/auth/jwt.strategy'
 import { PrismaService } from '@/prisma/prisma.service'
-import {
-  Controller,
-  Get,
-  HttpCode,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('Cars')
@@ -22,14 +14,16 @@ export class ListAllCarController {
   @ApiResponse({ status: 200, description: 'Listagem realizada com sucesso' })
   @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(200)
-  async handle(@CurrentUser() userLoad: UserPayload) {
+  async handle() {
+    /*
     const userLogin = await this.prisma.user.findUnique({
       where: { id: userLoad.sub },
     })
 
+
     if (userLogin?.role === 'COLABORADOR') {
       throw new NotFoundException('Usuario não é um administrador do sistema')
-    }
+    } */
 
     const cars = await this.prisma.car.findMany({
       select: {
