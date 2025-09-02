@@ -9,6 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import { UploadModule } from './controller/upload/upload.module'
 import { CarModule } from './controller/cars/car.module'
 import { SchedulingModule } from './controller/scheduling/scheduling.module'
+import { RegisterModule } from './controller/register/register.module'
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { SchedulingModule } from './controller/scheduling/scheduling.module'
     CarModule,
     SchedulingModule,
     UploadModule,
+    RegisterModule,
   ],
   controllers: [],
 })

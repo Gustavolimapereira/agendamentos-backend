@@ -119,7 +119,7 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name create_scheduling
+# @name list_scheduling
 GET {{baseUrl}}/scheduling
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -150,3 +150,30 @@ Authorization: Bearer {{authToken}}
 POST {{baseUrl}}/upload-avatar
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+# @name upload_cnh_front
+POST {{baseUrl}}/upload-cnh-front
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+# @name upload_cnh_back
+POST {{baseUrl}}/upload-cnh-back
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### CRUD DE REGISTROS
+
+# @name create_register
+POST {{baseUrl}}/register
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+	  "date": "2025-09-02",
+      "destination": "Extrema-MG",
+      "startTime": "2025-05-19T10:00:00Z",
+	  "endTime": "2025-05-19T11:00:00Z",
+      "userId": "68a1a4bf-38ca-4fb0-bb5a-ab1ea6ed3174",
+      "carId": "c5eb696d-ec5d-424b-b1c0-c0c67adf3000",
+      "schedulingId": "6a64a52d-2740-4c7f-9849-36886bc63dd2"
+}
