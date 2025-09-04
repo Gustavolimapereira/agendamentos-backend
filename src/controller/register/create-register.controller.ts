@@ -11,7 +11,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 import { RegisterCreateDto } from './dto/register.dto'
 
@@ -31,6 +31,7 @@ const bodyValidationPipe = new ZodValidationPipe(createRegisterBodySchema)
 type CreateRegisterBodySchema = z.infer<typeof createRegisterBodySchema>
 
 @ApiTags('Register')
+@ApiBearerAuth()
 @Controller('/register')
 @UseGuards(JwtAuthGuard)
 export class CreateRegisterController {
