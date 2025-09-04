@@ -112,7 +112,7 @@ Authorization: Bearer {{authToken}}
 
 {
 	"userId": "7be13bcb-43a1-4811-b0d1-93c57f171225",
-  	"carId": "8748451c-7613-4cc2-b9ca-aa95218c3edd",
+  	"carId": "fbd159de-5a30-4e90-870f-ebe1d2b45e3c",
   	"startTime": "2025-05-19T10:00:00Z",
 	"endTime": "2025-05-19T11:00:00Z"
 }
@@ -177,3 +177,10 @@ Authorization: Bearer {{authToken}}
       "carId": "c5eb696d-ec5d-424b-b1c0-c0c67adf3000",
       "schedulingId": "6a64a52d-2740-4c7f-9849-36886bc63dd2"
 }
+
+###
+
+# @name delete_register
+DELETE {{baseUrl}}/register/bce9ce04-fd24-45d2-8518-eee853e2c37d
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

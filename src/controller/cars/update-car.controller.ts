@@ -12,8 +12,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { z } from 'zod'
+import { CarsUpdateDto } from './dto/cars.dto'
 
 const updateCarBodySchema = z.object({
   plate: z.string().optional(),
@@ -37,6 +44,7 @@ export class UpdateCarController {
     description: 'ID do carro a ser atualizado',
     example: '123',
   })
+  @ApiBody({ type: CarsUpdateDto })
   @ApiResponse({ status: 200, description: 'Atualizado com sucesso' })
   @ApiResponse({ status: 401, description: 'Algo invalido' })
   @HttpCode(200)
