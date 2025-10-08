@@ -26,4 +26,10 @@ export class UsersService {
       data: { cnhBackUrl: filename },
     })
   }
+
+  async findById(userId: string) {
+    return this.prisma.user.findUnique({
+      where: { id: userId },
+    })
+  }
 }
